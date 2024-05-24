@@ -74,8 +74,19 @@ public function buscarInmueble($obj){
            $contador=$contador+1;
         }
    }   
+
 }
 
+
+private function listadoInmuebles()
+{
+    $listado = "";
+    $inmuebles = $this->getColInmuebles();
+    foreach ($inmuebles as $inmueble) {
+        $listado .= "Código: " . $inmueble->getCodigo() . ", Piso: " . $inmueble->getPiso() . ", Tipo: " . $inmueble->getTipo() . "\n";
+    }
+    return $listado;
+}
 
 /**
  * Implementar el método registrarAlquilerInmueble que recibe por parámetro
@@ -92,10 +103,51 @@ public function registrarAlquilerInmueble($tipoUso,$costoMaximo,$objPersona){
             
 }
 
+public function buscarInmuebles($obj)
+{
+    $i = 0;
+    $enum = count($this->getColInmuebles());
+    $bandera = -1;
 
+    while ($i < $enum && $bandera == -1) {
+        $inmueble = $this->getColInmuebles()[$i];
+        if ($inmueble == $obj) {
+            $bandera = $i;
+        }
+        $i++;
+    }
 
+    return $bandera;
+}
 
+public function calculaCostoEdificio()
+{
+    $costo = 0;
+    foreach ($this->getColInmuebles() as $inmueble) {
+        if ($inmueble->getObjInquilino() != null) {
+            $costo += $inmueble->getCostoMensual();
+        }
+    }
+    return $costo;
+}
+public function registrarAlquilerInmueble($tipoUso, $costoMaximo, $objPersona)
+{
+    $inmPisoChico = null;
+    $estado = false;
+    $colInmueblesDisp = $this->darInmueblesDisponibles($tipoUso, $costoMaximo);
 
+    foreach ($colInmueblesDisp as $inmueble) {
+        if ($inmPisoChico == null || $inmPisoChico->getPiso() > $inmueble->getPiso()) {
+            $inmPisoChico = $inmueble;
+        }
+    }
+
+    if ($this->buscarInmueble($inmPisoChico) != -1) {
+        $estado = $inmPisoChico->alquilar($objPersona);
+    }
+
+    return $estado;
+}
 
     public function concatenarObjetos(){
         $cadena="";

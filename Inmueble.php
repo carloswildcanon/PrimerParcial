@@ -63,6 +63,18 @@ public function estaDisponible($tipoUso,$costoMaximo)
    return $seAlquila;
 }
 
+public function alquilar($objInquilino)
+{
+    $bandera = false;
+    if ($this->getObjInquilino() == null) {
+        $this->setObjInquilino($objInquilino);
+        $bandera = true;
+    }
+    return $bandera;
+}
+
+
+
 }
 
 
